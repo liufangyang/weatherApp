@@ -1,0 +1,86 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+<h2>WeatherForecast</h2>
+ <input id = "city" type = "text" placeholder = " Enter your city here.." /> <br /><br />
+ <input id = "state" type = "text" placeholder = " Enter your state here.." /><br /><br />
+<button id = "submit" >Submit</button>
+<div class = "col-md-12">
+    <h2>You are in <span id = "name"></span></h2>
+</div>
+<div class = "col-md-12">
+   <h2>State in <span id = "staName"></span></h2>
+</div>
+<div class = "col-md-12">
+    <h2>Temperature is <span id = "temp"></span>&deg; F</h2>
+</div>
+<div class = "col-md-12">
+    <h2>Weather is <span id = "weather"></span></h2>
+  <img id = "weather-image" src="" alt = "Weather Icon" style = "width:128px; height:128px;">
+</div>
+<div class = "col-md-12">
+    <h2>Relative humidity is <span id = "humidity"></span></h2>
+</div>
+<div class = "col-md-12">
+   <h2>Time: <span id = "time"></span></h2>
+</div>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+<script src="http://www.geoplugin.net/javascript.gp" type="text/javascript"></script>
+
+
+<script>
+   var current_city = geoplugin_city();
+      $(document).ready(function () {
+          var city = current_city
+          var state = $("#state").val();
+          $.get("@Url.Action("GetWeatherForcastByCityAndState", "Weather")" + "?city=" + city + '&state=' + state, function (parsed_json) {
+            //jsonResponse
+            console.log(parsed_json);
+            var location = parsed_json['location']['city'];
+            var state_n = parsed_json['location']['state'];
+            var temp_f = parsed_json['current_observation']['temp_f'];
+            var weather = parsed_json['current_observation']['weather'];
+            var humidity = parsed_json['current_observation']['relative_humidity'];
+            var url = parsed_json['current_observation']['icon_url'];
+            var time = parsed_json['current_observation']['observation_time'];
+            console.log(parsed_json);
+            $("#name").text(location);
+            $("#temp").text(temp_f);
+            $("#staName").text(state_n);
+            $("#weather").text(weather);
+            $("#humidity").text(humidity);
+            $("#time").text(time);
+            setUrl(url);
+        });
+        });
+    $("#submit").click(function () {
+         city = $("#city").val();
+         state = $("#state").val();
+       $.get("@Url.Action("GetWeatherForcastByCityAndState", "Weather")" + "?city=" + city + '&state=' + state, function (parsed_json) {
+                //jsonResponse
+                console.log(parsed_json);
+                var location = parsed_json['location']['city'];
+                var state_n = parsed_json['location']['state'];
+                var temp_f = parsed_json['current_observation']['temp_f'];
+                var weather = parsed_json['current_observation']['weather'];
+                var humidity = parsed_json['current_observation']['relative_humidity'];
+                var url = parsed_json['current_observation']['icon_url'];
+                var time = parsed_json['current_observation']['observation_time'];
+                console.log(parsed_json);
+                $("#name").text(location);
+                $("#temp").text(temp_f);
+                $("#staName").text(state_n);
+                $("#weather").text(weather);
+                $("#humidity").text(humidity);
+                $("#time").text(time);
+                setUrl(url);
+        });
+    });
+    function setUrl(url) {
+        document.getElementById('weather-image').src = url;
+    }
+
+  
+</script>
